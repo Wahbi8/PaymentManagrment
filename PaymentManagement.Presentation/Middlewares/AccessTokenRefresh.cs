@@ -42,14 +42,29 @@ namespace PaymentManagement.Presentation.Middlewares
                     DateTime? issueDate = jwtToken.IssuedAt;
                     DateTime currentTime = DateTime.UtcNow;
 
-                    if(issueDate.HasValue && currentTime - issueDate > )
+                    if(issueDate.HasValue && currentTime - issueDate > TimeSpan.FromMinutes(30))
+                    {
+
+                    }
 
                 }
                 catch (Exception ex)
                 {
-
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    await context.Response.WriteAsync("Invalid token");
+                    return;
                 }
             }
+            else
+            {
+                // no token
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                await context.Response.WriteAsync("Token missing");
+                return;
+            }
+
+            await _next(context);
         }
+    }
     }
 }
