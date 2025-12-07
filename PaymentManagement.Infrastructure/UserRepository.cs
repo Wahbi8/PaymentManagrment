@@ -34,8 +34,21 @@ namespace PaymentManagement.Infrastructure
             if(user == null) return false;
 
             context.Users.Remove(user);
-            int result = await context.SaveChangesAsync();
-            return result > 0;
+            return await context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateUser(User user)
+        {
+            var u = await context.Users.FindAsync();
+            if(user == null) return false;
+            
+            u.Name = user.Name;
+            u.Email = user.Email;
+            u.Password = user.Password;
+            u.CompanyId = user.CompanyId;
+            u.IsAdmin = user.IsAdmin;
+
+            return await context.SaveChangesAsync() > 0;
         }
     }
 }

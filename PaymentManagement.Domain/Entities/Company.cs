@@ -18,13 +18,13 @@ namespace PaymentManagement.Domain
         public string CountryCode{ get; set; }
         public Country? Country { get; set; }
 
-        public Company(string name, string countryCode)
-        {
-            Name = name ?? throw new ArgumentNullException(nameof(name));
-            CountryCode = countryCode ?? throw new ArgumentNullException(nameof(countryCode));
-        }
+        //public Company(string name, string countryCode)
+        //{
+        //    Name = name ?? throw new ArgumentNullException(nameof(name));
+        //    CountryCode = countryCode ?? throw new ArgumentNullException(nameof(countryCode));
+        //}
 
-        // EF Core still needs a parameterless constructor
-        private Company() { }
+        //// EF Core still needs a parameterless constructor
+        //private Company() { }
     }
 }

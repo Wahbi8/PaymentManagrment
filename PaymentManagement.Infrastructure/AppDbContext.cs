@@ -18,5 +18,6 @@ namespace PaymentManagement.Infrastructure
         public DbSet<Company> Company { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
+        public DbSet<Payment> Payment { get; set; }
     }
 }

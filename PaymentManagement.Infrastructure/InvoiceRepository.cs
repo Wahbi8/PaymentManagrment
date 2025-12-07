@@ -34,9 +34,26 @@ namespace PaymentManagement.Infrastructure
             if (invoice != null) return false;
 
             _context.Invoice.Remove(invoice);
-            int res = await _context.SaveChangesAsync();
-            return res > 0;
+            return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<bool> UpdateInvoice(Invoice invoice)
+        {
+            var i = await _context.Invoice.FindAsync(invoice.Id);
+            if (i == null) return false;
+
+            i.CompanyId = invoice.CompanyId;
+            i.CreatedAt = invoice.CreatedAt;
+            i.UpdatedAt = DateTime.UtcNow;
+            i.IssueDate = invoice.IssueDate;
+            i.DueDate = invoice.DueDate;
+            i.TotalAmount = invoice.TotalAmount;
+            i.AmountPaid = invoice.AmountPaid;
+            i.IsPaid = invoice.IsPaid;
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
 
     }
 }

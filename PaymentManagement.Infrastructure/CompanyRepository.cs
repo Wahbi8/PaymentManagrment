@@ -35,9 +35,18 @@ namespace PaymentManagement.Infrastructure
             if (company == null) return false;
             
             _context.Company.Remove(company);
-            var res = await _context.SaveChangesAsync();
+            return await _context.SaveChangesAsync() > 0;
+        }
 
-            return res > 0;
+        public async Task<bool> UpdateCompany(Company company)
+        {
+            var c = await _context.Company.FindAsync(company.Id);
+            if (c == null) return false;
+
+            c.Name = company.Name;
+            c.CountryCode = company.CountryCode;
+
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }
