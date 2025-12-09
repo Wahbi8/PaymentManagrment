@@ -28,5 +28,11 @@ namespace PaymentManagement.Domain
         public decimal AmountPaid { get; set; }
         [Column("is_paid")]
         public bool IsPaid { get; set; }
+        [Column("is_deleted")]
+        public bool IsDeleted { get; set; }
+        [Column("created_by")]
+        public Guid CreatedBy { get; set; }
+        [Column("updated_by")]
+        public Guid UpdatedBy { get; set; }
     }
 }
