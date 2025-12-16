@@ -11,7 +11,7 @@ namespace PaymentManagement.Domain.Entities
     public class Customer
     {
         [Column("id")]
-        public Guid id {  get; set; }
+        public Guid Id {  get; set; }
         [Column("company_id")]
         public Guid CompanyId { get; set; }
         [Column("name")]

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PaymentManagement.Domain
 {
@@ -34,5 +29,62 @@ namespace PaymentManagement.Domain
         public Guid CreatedBy { get; set; }
         [Column("updated_by")]
         public Guid UpdatedBy { get; set; }
+
+        [Column("status")]
+        public InvoiceStatus Status { get; set; }
+
+        public void send()
+        {
+            if (Status != InvoiceStatus.draft)
+                throw new InvalidOperationException("Only draft invoices can be sent.");
+
+            Status = InvoiceStatus.sent;
+        }
+
+        public void markAsPaid()
+        {
+            if (Status != InvoiceStatus.sent)
+                throw new InvalidOperationException("Only sent invoices can be marked as paid.");
+
+            Status = InvoiceStatus.paid;
+            IsPaid = true;
+            AmountPaid = TotalAmount;
+        }
+
+        public void cancel()
+        {
+            if (Status == InvoiceStatus.paid)
+                throw new InvalidOperationException("Paid invoices cannot be cancelled.");
+            Status = InvoiceStatus.cancelled;
+        }
+
+        public void markAsOverdue()
+        {
+            if (Status != InvoiceStatus.sent)
+                throw new InvalidOperationException("Only sent invoices can be marked as overdue.");
+            Status = InvoiceStatus.overdue;
+        }
+
+        public void ApplyPayment(decimal amount)
+        {
+            if (Status != InvoiceStatus.sent && Status != InvoiceStatus.overdue)
+                throw new InvalidOperationException("Payment can only be applied to sent or underdoe invoices.");
+
+            AmountPaid += amount;
+            if (AmountPaid >= TotalAmount)
+            {
+                IsPaid = true;
+                Status = InvoiceStatus.paid;
+            }
+        }
+    }
+
+    public enum InvoiceStatus
+    {
+        draft,
+        sent,
+        paid,
+        overdue,
+        cancelled
     }
 }

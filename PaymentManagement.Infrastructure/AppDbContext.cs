@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PaymentManagement.Domain;
+using PaymentManagement.Domain.Entities;
 using PaymentManagement.Domain.models;
 
 namespace PaymentManagement.Infrastructure
@@ -19,5 +15,7 @@ namespace PaymentManagement.Infrastructure
         public DbSet<Invoice> Invoice { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<Payment> Payment { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<PaymentMethod> PaymentMethod { get; set; }
     }
 }

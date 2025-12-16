@@ -11,7 +11,7 @@ namespace PaymentManagement.Domain.Entities
     public class PaymentMethod
     {
         [Column("id")]
-        public Guid id { get; set; }
+        public Guid Id { get; set; }
         [Column("customenr_id")]
         public Guid CustomerId { get; set; }
         [Column("payment_id")]
@@ -28,8 +28,7 @@ namespace PaymentManagement.Domain.Entities
         public DateTime CreatedAt { get; set; }
         [Column("updated_at")]
         public DateTime UpdatedAt { get; set; }
-        [Column("deleted_at")]
-        public DateTime DeletedAt { get; set; }
+        
 
     }
 }
