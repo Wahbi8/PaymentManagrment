@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PaymentManagement.Domain.Entities;
 
 namespace PaymentManagement.Domain
 {
@@ -32,6 +33,8 @@ namespace PaymentManagement.Domain
         public bool IsRefunded { get; set; }
         [Column("is_deleted")]
         public bool IsDeleted { get; set; }
-        
+        [Column("currency")]
+        public string Currency { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
     }
 }

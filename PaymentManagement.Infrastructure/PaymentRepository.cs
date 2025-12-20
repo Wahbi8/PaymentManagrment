@@ -21,6 +21,9 @@ namespace PaymentManagement.Infrastructure
 
         public async Task<List<Payment>> GetAllPayments() => await _context.Payment.ToListAsync();
 
+        public async Task<List<Payment>> GetPaymentByInvoiceId(Guid invoiceId) =>
+            await _context.Payment.Where(p => p.InvoiceId == invoiceId).ToListAsync();
+
         public async Task<bool> AddPayment(Payment payment)
         {
             await _context.Payment.AddAsync(payment);
