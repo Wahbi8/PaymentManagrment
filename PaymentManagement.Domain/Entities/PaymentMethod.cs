@@ -14,8 +14,7 @@ namespace PaymentManagement.Domain.Entities
         public Guid Id { get; set; }
         [Column("customenr_id")]
         public Guid CustomerId { get; set; }
-        [Column("payment_id")]
-        public Guid PaymentId { get; set; }
+        
         [Column("type")]
         public int Type { get; set; }
         [Column("payment_token")]

@@ -32,6 +32,14 @@ namespace PaymentManagement.Application.Services
         public async Task<bool> AddPayment(Payment payment) 
         {
             // add paymentMethod to the payment before adding payment
+            if (payment != null)
+            {
+                
+                if(payment.PaymentMethod  != null)
+                {
+                    payment.PaymentMethod.Id = Guid.NewGuid();
+                }
+            }
         }
 
     }
