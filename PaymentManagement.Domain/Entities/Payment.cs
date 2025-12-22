@@ -35,6 +35,7 @@ namespace PaymentManagement.Domain
         public bool IsDeleted { get; set; }
         [Column("currency")]
         public string Currency { get; set; }
+        [NotMapped]
         public PaymentMethod? PaymentMethod { get; set; }
         [Column("payment_method_id")]
         public Guid? PaymentMethodId { get; set; }

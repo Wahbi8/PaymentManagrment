@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PaymentManagement.Domain.Entities;
+using PaymentManagement.Domain;
 using PaymentManagement.Infrastructure;
 
 namespace PaymentManagement.Application.Services
@@ -23,9 +23,11 @@ namespace PaymentManagement.Application.Services
             return paymentMethods;
         }
 
-        public async Task<bool> AddPaymrntMethod(PaymentMethod paymentMethod)
+        public async Task AddPaymentMethod(PaymentMethod paymentMethod)
         {
-            return await _paymentMethodRepo.AddPaymentMethod(paymentMethod);
+            if (paymentMethod == null)
+                throw new BusinessException("Payment Method must be filled");
+            await _paymentMethodRepo.AddPaymentMethod(paymentMethod);
         }
     }
 }

@@ -11,10 +11,12 @@ namespace PaymentManagement.Application.Services
     public class PaymentServices
     {
         private readonly PaymentRepository _PaymentRepository;
+        private readonly PaymentMethodRepository _paymentMethodRepository;
 
-        public PaymentServices(PaymentRepository paymentRepository)
+        public PaymentServices(PaymentRepository paymentRepository, PaymentMethodRepository paymentMethodRepository)
         {
             _PaymentRepository = paymentRepository;
+            _paymentMethodRepository = paymentMethodRepository;
         }
 
         public async Task<List<Payment>> GetAllPayments()
@@ -29,17 +31,25 @@ namespace PaymentManagement.Application.Services
             return payments;
         }
 
-        public async Task<bool> AddPayment(Payment payment) 
+        public async Task AddPayment(Payment payment) 
         {
-            // add paymentMethod to the payment before adding payment
-            if (payment != null)
+            if (payment == null)
+                throw new BusinessException("Payment fields are required");
+
+            bool hasExistingMethod = payment.PaymentMethodId != null;
+            bool hasNewMethod = payment.PaymentMethod != null;
+
+            if (hasExistingMethod == hasNewMethod)
+                throw new BusinessException("Provide either an existing payment method or a new one");
+
+            if (hasNewMethod)
             {
-                
-                if(payment.PaymentMethod  != null)
-                {
-                    payment.PaymentMethod.Id = Guid.NewGuid();
-                }
+                await _paymentMethodRepository.AddPaymentMethod(payment.PaymentMethod!);
+                payment.PaymentMethodId = payment.PaymentMethod!.Id;
             }
+
+            await _PaymentRepository.AddPayment(payment);
+
         }
 
     }

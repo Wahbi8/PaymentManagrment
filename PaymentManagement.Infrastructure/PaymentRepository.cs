@@ -24,10 +24,10 @@ namespace PaymentManagement.Infrastructure
         public async Task<List<Payment>> GetPaymentByInvoiceId(Guid invoiceId) =>
             await _context.Payment.Where(p => p.InvoiceId == invoiceId).ToListAsync();
 
-        public async Task<bool> AddPayment(Payment payment)
+        public async Task AddPayment(Payment payment)
         {
             await _context.Payment.AddAsync(payment);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DeletePayment(Guid id)

@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using PaymentManagement.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using PaymentManagement.Domain;
 
 namespace PaymentManagement.Infrastructure
 {
@@ -21,12 +16,12 @@ namespace PaymentManagement.Infrastructure
 
         public async Task<List<PaymentMethod>> GetAllPaymentMethods() => await _context.PaymentMethod.ToListAsync();
 
-        public async Task<List<PaymentMethod>> GetPaymentMethodsByUserId(Guid id) => 
+        public async Task<List<PaymentMethod>> GetPaymentMethodsByUserId(Guid id) =>
             await _context.PaymentMethod.Where(p => p.CustomerId == id).ToListAsync();
-        public async Task<bool> AddPaymentMethod(PaymentMethod paymentMethod)
+        public async Task AddPaymentMethod(PaymentMethod paymentMethod)
         {
             await _context.PaymentMethod.AddAsync(paymentMethod);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DeletePaymentMethod(Guid id)
