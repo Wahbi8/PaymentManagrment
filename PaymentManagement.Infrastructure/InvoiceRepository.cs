@@ -37,21 +37,10 @@ namespace PaymentManagement.Infrastructure
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> UpdateInvoice(Invoice invoice)
+        public async Task UpdateInvoice(Invoice invoice)
         {
-            var i = await _context.Invoice.FindAsync(invoice.Id);
-            if (i == null) return false;
-
-            i.CompanyId = invoice.CompanyId;
-            i.CreatedAt = invoice.CreatedAt;
-            i.UpdatedAt = DateTime.UtcNow;
-            i.IssueDate = invoice.IssueDate;
-            i.DueDate = invoice.DueDate;
-            i.TotalAmount = invoice.TotalAmount;
-            i.AmountPaid = invoice.AmountPaid;
-            i.IsPaid = invoice.IsPaid;
-
-            return await _context.SaveChangesAsync() > 0;
+            _context.Invoice.Update(invoice);
+            await _context.SaveChangesAsync();
         }
 
 

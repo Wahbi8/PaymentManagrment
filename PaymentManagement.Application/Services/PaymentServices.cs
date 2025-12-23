@@ -12,6 +12,7 @@ namespace PaymentManagement.Application.Services
     {
         private readonly PaymentRepository _PaymentRepository;
         private readonly PaymentMethodRepository _paymentMethodRepository;
+        private readonly InvoiceRepository _invoiceRepository;
 
         public PaymentServices(PaymentRepository paymentRepository, PaymentMethodRepository paymentMethodRepository)
         {
@@ -31,10 +32,13 @@ namespace PaymentManagement.Application.Services
             return payments;
         }
 
-        public async Task AddPayment(Payment payment) 
+        public async Task AddPayment(Payment payment)
         {
             if (payment == null)
                 throw new BusinessException("Payment fields are required");
+
+            if (payment.InvoiceId == Guid.Empty)
+                throw new BusinessException("Payment need Invoice to be processed");
 
             bool hasExistingMethod = payment.PaymentMethodId != null;
             bool hasNewMethod = payment.PaymentMethod != null;
@@ -48,8 +52,13 @@ namespace PaymentManagement.Application.Services
                 payment.PaymentMethodId = payment.PaymentMethod!.Id;
             }
 
-            await _PaymentRepository.AddPayment(payment);
+            payment.Invoice = await _invoiceRepository.GetInvoiceById(payment.InvoiceId);
+            if (payment.Invoice == null)
+                throw new BusinessException("Can not find the the invoice");
 
+            payment.Invoice.ApplyPayment(payment.Amount);
+
+            await _PaymentRepository.AddPayment(payment);
         }
 
     }

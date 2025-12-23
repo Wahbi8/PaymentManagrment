@@ -39,5 +39,7 @@ namespace PaymentManagement.Domain
         public PaymentMethod? PaymentMethod { get; set; }
         [Column("payment_method_id")]
         public Guid? PaymentMethodId { get; set; }
+        [NotMapped]
+        public Invoice Invoice { get; set; }
     }
 }
