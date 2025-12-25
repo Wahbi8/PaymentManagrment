@@ -12,12 +12,10 @@ namespace PaymentManagement.Infrastructure
             _context = context;
         }
 
-        public async Task<bool> Register(User user)
+        public async Task Register(User user)
         {
             await _context.Users.AddAsync(user);
-            int res = await _context.SaveChangesAsync();
-
-            return res > 0;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<User?> LogIn(string email, string password)

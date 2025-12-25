@@ -20,35 +20,25 @@ namespace PaymentManagement.Infrastructure
 
         public async Task<User?> GetByIdAsync(Guid id) => await context.Users.FindAsync(id);
 
-        public async Task<bool> AddUser(User user)
+        public async Task AddUser(User user)
         {
             await context.Users.AddAsync(user);
-            int result = await context.SaveChangesAsync();
-
-            return result > 0;
+            await context.SaveChangesAsync();
         }
 
-        public async Task<bool> RemoveUser(Guid id)
+        public async Task RemoveUser(Guid id)
         {
             var user = await context.Users.FindAsync(id);
-            if(user == null) return false;
+            if(user == null) throw new BusinessException("Can't find the user");
 
             context.Users.Remove(user);
-            return await context.SaveChangesAsync() > 0;
+            await context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
-            var u = await context.Users.FindAsync();
-            if(user == null) return false;
-            
-            u.Name = user.Name;
-            u.Email = user.Email;
-            u.Password = user.Password;
-            u.CompanyId = user.CompanyId;
-            u.IsAdmin = user.IsAdmin;
-
-            return await context.SaveChangesAsync() > 0;
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
         }
     }
 }

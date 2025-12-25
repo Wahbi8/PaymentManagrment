@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using PaymentManagement.Domain;
 using PaymentManagement.Domain.Entities;
 
 namespace PaymentManagement.Infrastructure
@@ -21,32 +22,32 @@ namespace PaymentManagement.Infrastructure
 
         public async Task<List<Customer>> GetAllCustomers() => await _context.Customer.ToListAsync();
 
-        public async Task<bool> AddCustomer(Customer customer)
+        public async Task AddCustomer(Customer customer)
         {
             await _context.Customer.AddAsync(customer);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteCustomer(Guid id)
+        public async Task DeleteCustomer(Guid id)
         {
             var customer = await _context.Customer.FindAsync(id);
-            if (customer == null) return false;
+            if (customer == null) throw new BusinessException("Can't find the customer");
 
             _context.Customer.Remove(customer);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateCustemer(Customer customer)
+        public async Task UpdateCustemer(Customer customer)
         {
             var c = await _context.Customer.FindAsync(customer.Id);
-            if (c == null) return false;
+            if (c == null) throw new BusinessException("Can't find the customer");
 
             c.CompanyId = customer.CompanyId;
             c.Name = customer.Name;
             c.Email = customer.Email;
             c.UpdatedAt = DateTime.Now;
 
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
     }
 }

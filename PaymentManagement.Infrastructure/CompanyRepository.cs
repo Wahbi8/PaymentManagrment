@@ -21,32 +21,25 @@ namespace PaymentManagement.Infrastructure
 
         public async Task<Company> GetCompanyById(Guid id) => await _context.Company.FindAsync(id);
 
-        public async Task<bool> AddCompany(Company company)
+        public async Task AddCompany(Company company)
         {
             await _context.Company.AddAsync(company);
-            int res = await _context.SaveChangesAsync();
-
-            return res > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteCompany(Guid id)
+        public async Task DeleteCompany(Guid id)
         {
             var company = await _context.Company.FindAsync(id);
-            if (company == null) return false;
+            if (company == null) throw new BusinessException("Can't find the company");
             
             _context.Company.Remove(company);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdateCompany(Company company)
+        public async Task UpdateCompany(Company company)
         {
-            var c = await _context.Company.FindAsync(company.Id);
-            if (c == null) return false;
-
-            c.Name = company.Name;
-            c.CountryCode = company.CountryCode;
-
-            return await _context.SaveChangesAsync() > 0;
+            _context.Company.Update(company);
+            await _context.SaveChangesAsync();
         }
     }
 }

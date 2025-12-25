@@ -24,28 +24,19 @@ namespace PaymentManagement.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeletePaymentMethod(Guid id)
+        public async Task DeletePaymentMethod(Guid id)
         {
             var paymentMethod = await _context.PaymentMethod.FindAsync(id);
-            if (paymentMethod != null) return false;
+            if (paymentMethod != null) throw new BusinessException("Can't find the payment method");
 
             _context.PaymentMethod.Remove(paymentMethod);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdatePaymentMethod(PaymentMethod paymentMethod)
+        public async Task UpdatePaymentMethod(PaymentMethod paymentMethod)
         {
-            var PM = await _context.PaymentMethod.FindAsync(paymentMethod.Id);
-            if (PM == null) return false;
-
-            PM.CustomerId = paymentMethod.CustomerId;
-            PM.Type = paymentMethod.Type;
-            PM.PaymentToken = paymentMethod.PaymentToken;
-            PM.CardBrand = paymentMethod.CardBrand;
-            PM.Bank_name = paymentMethod.Bank_name;
-            PM.UpdatedAt = DateTime.Now;
-
-            return await _context.SaveChangesAsync() > 0;
+            _context.PaymentMethod.Update(paymentMethod);
+            await _context.SaveChangesAsync();
         }
     }
 }

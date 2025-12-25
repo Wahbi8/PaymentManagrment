@@ -30,24 +30,19 @@ namespace PaymentManagement.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeletePayment(Guid id)
+        public async Task DeletePayment(Guid id)
         {
             var payment = await _context.Payment.FindAsync();
-            if (payment == null) return false;
+            if (payment == null) throw new BusinessException("Can't find the payment");
 
             _context.Payment.Remove(payment);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> UpdatePayment(Payment payment)
+        public async Task UpdatePayment(Payment payment)
         {
-            var p = await _context.Payment.FindAsync(payment.Id);
-            if (p == null) return false;
-
-            p.InvoiceId = payment.InvoiceId;
-            p.Amount = payment.Amount;
-
-            return await _context.SaveChangesAsync() > 0;
+            _context.Payment.Update(payment);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -21,20 +21,19 @@ namespace PaymentManagement.Infrastructure
 
         public async Task<Invoice> GetInvoiceById(Guid id) => await _context.Invoice.FindAsync(id);
 
-        public async Task<bool> AddInvoice(Invoice invoice)
+        public async Task AddInvoice(Invoice invoice)
         {
             await _context.Invoice.AddAsync(invoice);
-            int res = await _context.SaveChangesAsync();
-            return res > 0;
+            await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteInvoice(Guid id)
+        public async Task DeleteInvoice(Guid id)
         {
             var invoice = await _context.Invoice.FindAsync(id);
-            if (invoice != null) return false;
+            if (invoice != null) throw new BusinessException("Can't find the invoice");
 
             _context.Invoice.Remove(invoice);
-            return await _context.SaveChangesAsync() > 0;
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateInvoice(Invoice invoice)
