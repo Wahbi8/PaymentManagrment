@@ -12,7 +12,6 @@ namespace PaymentManagement.Domain
     public class PaymentMethod
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Column("id")]
         public Guid Id { get; set; }
         [Column("customenr_id")]

@@ -16,15 +16,18 @@ namespace PaymentManagement.Domain
         public string Name { get; set; }
         [Column("country_code")]
         public string CountryCode{ get; set; }
+        [NotMapped]
         public Country? Country { get; set; }
 
-        //public Company(string name, string countryCode)
-        //{
-        //    Name = name ?? throw new ArgumentNullException(nameof(name));
-        //    CountryCode = countryCode ?? throw new ArgumentNullException(nameof(countryCode));
-        //}
+        public Company(string name, string countryCode)
+        {
+            Name = string.IsNullOrEmpty(name) ? 
+                throw new DomainException("The company name is empty") : name;
 
-        //// EF Core still needs a parameterless constructor
-        //private Company() { }
+            CountryCode = string.IsNullOrEmpty(countryCode) ?
+                throw new DomainException("The company country code is empty") : countryCode ;
+        }
+
+        private Company() { }
     }
 }
