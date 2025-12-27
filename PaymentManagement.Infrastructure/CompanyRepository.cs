@@ -38,6 +38,10 @@ namespace PaymentManagement.Infrastructure
 
         public async Task UpdateCompany(Company company)
         {
+            var com = await _context.Company.FindAsync(company.Id);
+            if (com == null)
+                throw new BusinessException("Can't find the company to update");
+
             _context.Company.Update(company);
             await _context.SaveChangesAsync();
         }

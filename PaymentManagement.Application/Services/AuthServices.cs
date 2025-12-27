@@ -21,16 +21,15 @@ namespace PaymentManagement.Application.Services
             _authRepository = authRepository;
             _configuration = configuration.GetRequiredSection("JwtSettings");
         }
-        public async Task<string> Register(User? user)
+        public async Task Register(User? user)
         {
-            if (user == null) return "fill the fields befor submiting";
+            if (user == null) 
+                throw new BusinessException("fill the fields befor submiting");
             if (user.Name == null || user.Password == null || user.Email == null)
-                return "Fill all the fields befor submiting";
+                throw new BusinessException("Fill all the fields befor submiting");
 
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            var res = await _authRepository.Register(user);
-
-            return res.ToString();
+            await _authRepository.Register(user);
         }
 
         public async Task<LoginResponse> Login(string email, string password)

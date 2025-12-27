@@ -37,16 +37,9 @@ namespace PaymentManagement.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateCustemer(Customer customer)
+        public async Task UpdateCustomer(Customer customer)
         {
-            var c = await _context.Customer.FindAsync(customer.Id);
-            if (c == null) throw new BusinessException("Can't find the customer");
-
-            c.CompanyId = customer.CompanyId;
-            c.Name = customer.Name;
-            c.Email = customer.Email;
-            c.UpdatedAt = DateTime.Now;
-
+            _context.Customer.Update(customer);
             await _context.SaveChangesAsync();
         }
     }

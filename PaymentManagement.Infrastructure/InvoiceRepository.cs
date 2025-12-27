@@ -42,6 +42,7 @@ namespace PaymentManagement.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-
+        public async Task<List<Invoice>> GetInvoicesByCompanyId(Guid companyId) =>
+            await _context.Invoice.Where(i => i.CompanyId == companyId).ToListAsync();
     }
 }

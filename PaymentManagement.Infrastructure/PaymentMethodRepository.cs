@@ -27,7 +27,7 @@ namespace PaymentManagement.Infrastructure
         public async Task DeletePaymentMethod(Guid id)
         {
             var paymentMethod = await _context.PaymentMethod.FindAsync(id);
-            if (paymentMethod != null) throw new BusinessException("Can't find the payment method");
+            if (paymentMethod == null) throw new BusinessException("Can't find the payment method");
 
             _context.PaymentMethod.Remove(paymentMethod);
             await _context.SaveChangesAsync();
@@ -35,6 +35,10 @@ namespace PaymentManagement.Infrastructure
 
         public async Task UpdatePaymentMethod(PaymentMethod paymentMethod)
         {
+            var pm = await _context.PaymentMethod.FindAsync(paymentMethod.Id);
+            if (pm == null)
+                throw new BusinessException($"can't find {nameof(PaymentMethod)} in DB");
+
             _context.PaymentMethod.Update(paymentMethod);
             await _context.SaveChangesAsync();
         }

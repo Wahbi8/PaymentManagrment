@@ -23,12 +23,19 @@ namespace PaymentManagement.Application.Services
         public async Task<List<Payment>> GetAllPayments()
         {
             var payments = await _PaymentRepository.GetAllPayments();
+            if (payments == null || !payments.Any())
+                throw new BusinessException("No payments found");
             return payments;
         }
 
         public async Task<List<Payment>> GetPaymentsByInvoiceId(Guid id)
         {
+            if (id == Guid.Empty)
+                throw new BusinessException("Invoice id cannot be empty");
+
             var payments = await _PaymentRepository.GetPaymentByInvoiceId(id);
+            if (payments == null || !payments.Any())
+                throw new BusinessException("No payments found for the invoice");
             return payments;
         }
 
@@ -57,7 +64,7 @@ namespace PaymentManagement.Application.Services
                 throw new BusinessException("Can not find the the invoice");
 
             payment.Invoice.ApplyPayment(payment.Amount);
-
+            payment.Id = Guid.NewGuid();
             await _PaymentRepository.AddPayment(payment);
         }
 

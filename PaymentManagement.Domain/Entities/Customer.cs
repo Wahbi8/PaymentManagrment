@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PaymentManagement.Domain.Entities
+namespace PaymentManagement.Domain
 {
     [Table("customer")]
     public class Customer
