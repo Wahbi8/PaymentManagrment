@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PaymentManagement.Domain;
+﻿using PaymentManagement.Domain;
 using PaymentManagement.Infrastructure;
 
 namespace PaymentManagement.Application.Services
@@ -26,6 +21,15 @@ namespace PaymentManagement.Application.Services
                 throw new BusinessException("Company not found");
             return company;
         }
+        public async Task<Company> GetCompanyByUserId(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new BusinessException("User id cannot be empty");
+            var company = await _companyRepository.GetCompanyById(id);
+            if (company == null)
+                throw new BusinessException("Company not found");
+            return company;
+        }
 
         public async Task AddCompany(Company company)
         {
@@ -38,11 +42,11 @@ namespace PaymentManagement.Application.Services
 
         public async Task DeleteCompany(Guid id)
         {
-            if (id == Guid.Empty) 
+            if (id == Guid.Empty)
                 throw new BusinessException("Then id is empty");
 
             await _companyRepository.DeleteCompany(id);
-        } 
+        }
 
         public async Task UpdateCompany(Company company)
         {

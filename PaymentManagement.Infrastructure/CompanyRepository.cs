@@ -20,6 +20,8 @@ namespace PaymentManagement.Infrastructure
         public async Task<List<Company>> GetAllCompanies() => await _context.Company.ToListAsync();
 
         public async Task<Company> GetCompanyById(Guid id) => await _context.Company.FindAsync(id);
+        public async Task<Company> GetCompanyByUserId(Guid id) => 
+            await _context.Company.Where(i => i.Id == id).FirstAsync();
 
         public async Task AddCompany(Company company)
         {

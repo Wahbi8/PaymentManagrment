@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PaymentManagement.Domain;
+﻿using PaymentManagement.Domain;
 using PaymentManagement.Infrastructure;
 
 namespace PaymentManagement.Application.Services
@@ -19,8 +14,8 @@ namespace PaymentManagement.Application.Services
 
         public async Task<List<PaymentMethod>> GetPaymentMethodsByUserId(Guid id)
         {
-            if (id == Guid.Empty) 
-                throw new BusinessException("UserId cannot be empty"); 
+            if (id == Guid.Empty)
+                throw new BusinessException("UserId cannot be empty");
             var paymentMethods = await _paymentMethodRepo.GetPaymentMethodsByUserId(id);
             if (paymentMethods == null || !paymentMethods.Any())
                 throw new BusinessException("No payment methods found for the user");

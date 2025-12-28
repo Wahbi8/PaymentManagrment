@@ -19,18 +19,15 @@ namespace PaymentManagement.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Register(User? user)
+        public async Task Register(User? user)
         {
-            var res = await _authService.Register(user);
-            return Ok(res);
+            await _authService.Register(user);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Login(string email, string password)
+        public async Task Login(string email, string password)
         {
-            string res = await _authService.Login(email, password);
-
-            return Ok(res);
+            await _authService.Login(email, password);
         }
     }
 }

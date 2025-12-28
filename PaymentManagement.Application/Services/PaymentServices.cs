@@ -14,10 +14,13 @@ namespace PaymentManagement.Application.Services
         private readonly PaymentMethodRepository _paymentMethodRepository;
         private readonly InvoiceRepository _invoiceRepository;
 
-        public PaymentServices(PaymentRepository paymentRepository, PaymentMethodRepository paymentMethodRepository)
+        public PaymentServices(PaymentRepository paymentRepository,
+            PaymentMethodRepository paymentMethodRepository,
+            InvoiceRepository invoiceRepository)
         {
             _PaymentRepository = paymentRepository;
             _paymentMethodRepository = paymentMethodRepository;
+            _invoiceRepository = invoiceRepository;
         }
 
         public async Task<List<Payment>> GetAllPayments()
