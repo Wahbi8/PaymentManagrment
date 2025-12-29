@@ -34,9 +34,20 @@ namespace PaymentManagement.Application.Services
         public async Task<List<Payment>> GetPaymentsByInvoiceId(Guid id)
         {
             if (id == Guid.Empty)
-                throw new BusinessException("Invoice id cannot be empty");
+                throw new BusinessException("InvoiceId cannot be empty");
 
             var payments = await _PaymentRepository.GetPaymentByInvoiceId(id);
+            if (payments == null || !payments.Any())
+                throw new BusinessException("No payments found for the invoice");
+            return payments;
+        }
+        
+        public async Task<List<Payment>> GetAllPaymentsByUserId(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new BusinessException("UserId cannot be empty");
+
+            var payments = await _PaymentRepository.GetAllPaymentsByUserId(id);
             if (payments == null || !payments.Any())
                 throw new BusinessException("No payments found for the invoice");
             return payments;
