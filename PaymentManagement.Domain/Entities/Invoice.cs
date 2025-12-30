@@ -81,7 +81,7 @@ namespace PaymentManagement.Domain
 
     public enum InvoiceStatus
     {
-        draft,
+        draft = 0,
         sent,
         paid,
         overdue,

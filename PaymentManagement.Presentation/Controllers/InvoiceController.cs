@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using PaymentManagement.Domain;
 using PaymentManagement.Application.Services;
 using PaymentManagement.Presentation.Common.Extensions;
+using PaymentManagement.Application.DTO;
 
 namespace PaymentManagement.Presentation.Controllers
 {
@@ -39,6 +40,20 @@ namespace PaymentManagement.Presentation.Controllers
         public async Task<IActionResult> DeleteInvoice(Guid id)
         {
             await _invoiceServices.DeleteInvoice(id);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SendInvoiceEmail([FromBody] InvoiceEmailRequest request)
+        {
+            await _invoiceServices.SendInvoiceEmail(request.InvoiceId, request.RecipientEmail);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CancelInvoice(Guid id)
+        {
+            await _invoiceServices.CancelInvoice(id);
             return Ok();
         }
     }
