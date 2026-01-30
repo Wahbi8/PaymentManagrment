@@ -46,6 +46,7 @@ namespace PaymentManagement.Presentation.Controllers
         [HttpPost]
         public async Task<IActionResult> SendInvoiceEmail([FromBody] InvoiceEmailRequest request)
         {
+            //For sending email manually
             await _invoiceServices.SendInvoiceEmail(request.InvoiceId, request.RecipientEmail);
             return Ok();
         }
