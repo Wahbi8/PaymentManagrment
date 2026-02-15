@@ -18,7 +18,7 @@ namespace PaymentManagement.Domain
         [Column("due_date")]
         public DateTime DueDate { get; set; }
         [Column("total_amount")]
-        public Decimal TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
         [Column("amount_paid")]
         public decimal AmountPaid { get; set; }
         [Column("is_paid")]
