@@ -31,10 +31,10 @@ namespace PaymentManagement.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AddUser(User user)
+        public async Task<ActionResult> AddUser(User user)
         {
-            bool result = await _userServices.AddUser(user);
-            return Ok(result);
+            await _userServices.AddUser(user);
+            return Ok();
         }
 
         [HttpGet]

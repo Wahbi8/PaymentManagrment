@@ -66,5 +66,5 @@ namespace PaymentManagement.Presentation.Middlewares
             await _next(context);
         }
     }
-    }
+    
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PaymentManagement.Domain;
-using PaymentManagement.Domain.Entities;
 using PaymentManagement.Domain.models;
 
 namespace PaymentManagement.Infrastructure

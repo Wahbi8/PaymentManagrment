@@ -24,7 +24,7 @@ namespace PaymentManagement.Domain
         [Column("card_brand")]
         public string CardBrand { get; set; }
         [Column("bank_name")]
-        public string Bank_name { get; set; }
+        public string BankName { get; set; }
         [Column("created_at")]
         public DateTime CreatedAt { get; set; }
         [Column("updated_at")]

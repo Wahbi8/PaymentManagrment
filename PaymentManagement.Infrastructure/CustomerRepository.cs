@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PaymentManagement.Domain;
-using PaymentManagement.Domain.Entities;
 
 namespace PaymentManagement.Infrastructure
 {
