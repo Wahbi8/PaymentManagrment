@@ -17,34 +17,34 @@ namespace PaymentManagement.Presentation.Controllers
             _paymentMethodServices = paymentMethodServices;
         }
 
-        [HttpGet]
+        [HttpGet("GetPaymentMethods")]
         public async Task<List<PaymentMethod>> GetPaymentMethodByUserId()
         {
             return await _paymentMethodServices.GetPaymentMethodsByUserId(User.GetUserId());
         }
 
-        [HttpPost]
+        [HttpPost("AddPaymentMethod")]
         public async Task<IActionResult> AddPaymentMethod([FromBody] PaymentMethod paymentMethod)
         {
             await _paymentMethodServices.AddPaymentMethod(paymentMethod);
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("UpdatePaymentMethod")]
         public async Task<IActionResult> UpdatePaymentMethod([FromBody] PaymentMethod paymentMethod)
         {
             await _paymentMethodServices.UpdatePaymentMethod(paymentMethod);
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("DeletePaymentMethod")]
         public async Task<IActionResult> DeletePaymentMethod([FromBody] Guid id)
         {
             await _paymentMethodServices.DeletePaymentMethod(id);
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("GetPaymentMethod")]
         public async Task<PaymentMethod> GetPaymentMethodById([FromBody] Guid id)
         {
             return await _paymentMethodServices.GetPaymentMethodById(id);

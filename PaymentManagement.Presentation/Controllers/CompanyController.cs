@@ -17,33 +17,33 @@ namespace PaymentManagement.Presentation.Controllers
             _companyService = companyService;
         }
 
-        [HttpGet]
+        [HttpGet("GetUserCompanies")]
         public async Task<Company> GetCompanyByUserId()
         {
             return await _companyService.GetCompanyByUserId(User.GetUserId());
         }
 
-        [HttpGet]
-        public async Task<Company> GetCompanyById(Guid id)
+        [HttpGet("GetCompanyById")]
+        public async Task<Company> GetCompanyById([FromBody] Guid id)
         {
             return await _companyService.GetCompanyById(id);
         }
 
-        [HttpPost]
+        [HttpPost("AddCompany")]
         public async Task<IActionResult> AddCompany([FromBody] Company company)
         {
             await _companyService.AddCompany(company);
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCompany(Guid id)
-        {
-            await _companyService.DeleteCompany(id);
-            return Ok();
-        }
+        //[HttpDelete("")]
+        //public async Task<IActionResult> DeleteCompany(Guid id)
+        //{
+        //    await _companyService.DeleteCompany(id);
+        //    return Ok();
+        //}
 
-        [HttpPut]
+        [HttpPut("UodateCompany")]
         public async Task<IActionResult> UpdateCompany([FromBody] Company company)
         {
             await _companyService.UpdateCompany(company);

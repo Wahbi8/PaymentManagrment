@@ -17,19 +17,19 @@ namespace PaymentManagement.Presentation.Controllers
             _paymentServices = paymentServices;
         }
 
-        [HttpGet]
+        [HttpGet("GetInvoicePayments")]
         public async Task<List<Payment>> GetPaymentsByInvoiceId(Guid id)
         {
             return await _paymentServices.GetPaymentsByInvoiceId(id);
         }
 
-        [HttpGet]
+        [HttpGet("GetUserPayments")]
         public async Task<List<Payment>> GetAllPaymentsByUserId()
         {
             return await _paymentServices.GetAllPaymentsByUserId(User.GetUserId());
         }
 
-        [HttpPost]
+        [HttpPost("AddPayment")]
         public async Task<IActionResult> AddPayment([FromBody] Payment payment)
         {
             await _paymentServices.AddPayment(payment);

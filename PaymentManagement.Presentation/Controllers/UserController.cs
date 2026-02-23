@@ -19,7 +19,7 @@ namespace PaymentManagement.Presentation.Controllers
             _userServices = userServices;
         }
 
-        [HttpGet]
+        [HttpGet("GetUser")]
         public async Task<ActionResult<User>> GetAllUsers()
         {
             //User user = new User();
@@ -30,14 +30,14 @@ namespace PaymentManagement.Presentation.Controllers
             //return Ok(users);
         }
 
-        [HttpPost]
+        [HttpPost("AddUser")]
         public async Task<ActionResult> AddUser(User user)
         {
             await _userServices.AddUser(user);
             return Ok();
         }
 
-        [HttpGet]
+        [HttpGet("GetUserById")]
         public async Task<ActionResult<User>> GetUserById(Guid id)
         {
             User user = await _userServices.GetUserById(id);   

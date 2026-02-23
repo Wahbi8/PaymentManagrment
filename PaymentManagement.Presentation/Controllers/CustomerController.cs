@@ -14,27 +14,27 @@ namespace PaymentManagement.Presentation.Controllers
             _customerServices = customerServices;
         }
 
-        [HttpGet]
+        [HttpGet("GetCustomer")]
         public async Task<Customer> GetCustomerById(Guid id)
         {
             return await _customerServices.GetCustomerById(id);
         }
 
-        [HttpPost]
+        [HttpPost("AddCustomer")]
         public async Task<IActionResult> AddCustomer([FromBody] Customer customer)
         {
             await _customerServices.AddCustomer(customer);
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(Guid id)
-        {
-            await _customerServices.DeleteCustomer(id);
-            return Ok();
-        }
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteCustomer(Guid id)
+        //{
+        //    await _customerServices.DeleteCustomer(id);
+        //    return Ok();
+        //}
 
-        [HttpPut]
+        [HttpPut("UpdateCustomer")]
         public async Task<IActionResult> UpdateCustomer([FromBody] Customer customer)
         {
             await _customerServices.UpdateCustomer(customer);

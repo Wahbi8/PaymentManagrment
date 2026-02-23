@@ -14,36 +14,36 @@ namespace PaymentManagement.Presentation.Controllers
         {
             _invoiceServices = invoiceServices;
         }
-        [HttpGet]
+        [HttpGet("GetINvoices")]
         public async Task<List<Invoice>> GetInvoicesByCompanyId()
         {
             return await _invoiceServices.GetInvoicesByCompanyId(User.GetUserId());
         }
-        [HttpGet]
+        [HttpGet("GetInvoiceById")]
         public async Task<Invoice> GetInvoiceById(Guid id)
         {
             return await _invoiceServices.GetInvoiceById(id);
         }
-        [HttpPost]
+        [HttpPost("AddInvoice")]
         public async Task<IActionResult> AddInvoice([FromBody] Invoice invoice)
         {
             await _invoiceServices.AddInvoice(invoice);
             return Ok();
         }
-        [HttpPut]
+        [HttpPut("UpdateInvoice")]
         public async Task<IActionResult> UpdateInvoice([FromBody] Invoice invoice)
         {
             await _invoiceServices.UpdateInvoice(invoice);
             return Ok();
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteInvoice")]
         public async Task<IActionResult> DeleteInvoice(Guid id)
         {
             await _invoiceServices.DeleteInvoice(id);
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("SendEmail")]
         public async Task<IActionResult> SendInvoiceEmail([FromBody] InvoiceEmailRequest request)
         {
             //For sending email manually
@@ -51,7 +51,7 @@ namespace PaymentManagement.Presentation.Controllers
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost("CancelInvoice")]
         public async Task<IActionResult> CancelInvoice(Guid id)
         {
             await _invoiceServices.CancelInvoice(id);
