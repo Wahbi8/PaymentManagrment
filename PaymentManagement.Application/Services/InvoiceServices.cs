@@ -105,5 +105,10 @@ namespace PaymentManagement.Application.Services
             }
         }
 
+        public async Task<List<Invoice>> GetAllInvoices()
+        {
+            var invoces = await _invoiceRepository.GetAllInvoices();
+            return invoces;
+        }
     }
 }

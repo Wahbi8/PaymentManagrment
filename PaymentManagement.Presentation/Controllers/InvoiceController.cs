@@ -57,5 +57,11 @@ namespace PaymentManagement.Presentation.Controllers
             await _invoiceServices.CancelInvoice(id);
             return Ok();
         }
+
+        [HttpGet("GetAllInvoices")]
+        public async Task<List<Invoice>> GetAllInvoices()
+        {
+            return await _invoiceServices.GetAllInvoices();
+        }
     }
 }
