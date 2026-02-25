@@ -19,6 +19,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<PaymentManagement.Application.Services.InvoiceServices>();
+builder.Services.AddScoped<PaymentManagement.Infrastructure.InvoiceRepository>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy.WithOrigins("http://localhost:5173") // Your frontend URL
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+});
+
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"];
@@ -55,9 +66,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowFrontend");
 //app.UseMiddleware<JwtMiddleware>();
 
 app.UseMiddleware<ExceptionMiddleware>();
+
+//app.UseAuthentication();
 
 app.UseAuthorization();
 
