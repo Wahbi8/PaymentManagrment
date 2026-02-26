@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using PaymentManagement.Application;
 using PaymentManagement.Infrastructure;
 using PaymentManagement.Presentation.Middlewares;
 
@@ -19,8 +20,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<PaymentManagement.Application.Services.InvoiceServices>();
-builder.Services.AddScoped<PaymentManagement.Infrastructure.InvoiceRepository>();
+builder.Services.AddServices();
+builder.Services.AddRepository();
 
 builder.Services.AddCors(options =>
 {
