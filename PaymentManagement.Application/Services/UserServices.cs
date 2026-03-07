@@ -1,13 +1,14 @@
-﻿using PaymentManagement.Domain;
+using PaymentManagement.Domain;
+using PaymentManagement.Domain.Interfaces;
 using PaymentManagement.Infrastructure;
 
 namespace PaymentManagement.Application.Services
 {
     public class UserServices
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UserServices(UserRepository userRepository)
+        public UserServices(IUserRepository userRepository)
         {
             _userRepository = userRepository;
         }

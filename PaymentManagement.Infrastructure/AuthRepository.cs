@@ -1,9 +1,10 @@
-﻿using PaymentManagement.Domain;
+using PaymentManagement.Domain;
+using PaymentManagement.Domain.Interfaces;
 using PaymentManagement.Domain.models;
 
 namespace PaymentManagement.Infrastructure
 {
-    public class AuthRepository
+    public class AuthRepository : IAuthRepository
     {
         private readonly AppDbContext _context;
 

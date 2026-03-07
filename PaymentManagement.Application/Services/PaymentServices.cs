@@ -1,22 +1,22 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PaymentManagement.Domain;
-using PaymentManagement.Infrastructure;
+using PaymentManagement.Domain.Interfaces;
 
 namespace PaymentManagement.Application.Services
 {
     public class PaymentServices
     {
-        private readonly PaymentRepository _PaymentRepository;
-        private readonly PaymentMethodRepository _paymentMethodRepository;
-        private readonly InvoiceRepository _invoiceRepository;
+        private readonly IPaymentRepository _PaymentRepository;
+        private readonly IPaymentMethodRepository _paymentMethodRepository;
+        private readonly IInvoiceRepository _invoiceRepository;
 
-        public PaymentServices(PaymentRepository paymentRepository,
-            PaymentMethodRepository paymentMethodRepository,
-            InvoiceRepository invoiceRepository)
+        public PaymentServices(IPaymentRepository paymentRepository,
+            IPaymentMethodRepository paymentMethodRepository,
+            IInvoiceRepository invoiceRepository)
         {
             _PaymentRepository = paymentRepository;
             _paymentMethodRepository = paymentMethodRepository;

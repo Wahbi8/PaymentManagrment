@@ -1,13 +1,13 @@
-﻿using PaymentManagement.Domain;
-using PaymentManagement.Infrastructure;
+using PaymentManagement.Domain;
+using PaymentManagement.Domain.Interfaces;
 
 namespace PaymentManagement.Application.Services
 {
     public class CompanyServices
     {
-        private readonly CompanyRepository _companyRepository;
+        private readonly ICompanyRepository _companyRepository;
 
-        public CompanyServices(CompanyRepository companyRepository)
+        public CompanyServices(ICompanyRepository companyRepository)
         {
             _companyRepository = companyRepository;
         }

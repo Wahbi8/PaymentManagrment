@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PaymentManagement.Domain;
+using PaymentManagement.Domain.Interfaces;
 
 namespace PaymentManagement.Infrastructure
 {
-    public class PaymentMethodRepository
+    public class PaymentMethodRepository : IPaymentMethodRepository
     {
         private readonly AppDbContext _context;
 

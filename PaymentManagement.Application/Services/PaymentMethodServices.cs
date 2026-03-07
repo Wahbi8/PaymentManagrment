@@ -1,13 +1,13 @@
-﻿using PaymentManagement.Domain;
-using PaymentManagement.Infrastructure;
+using PaymentManagement.Domain;
+using PaymentManagement.Domain.Interfaces;
 
 namespace PaymentManagement.Application.Services
 {
     public class PaymentMethodServices
     {
-        private readonly PaymentMethodRepository _paymentMethodRepo;
+        private readonly IPaymentMethodRepository _paymentMethodRepo;
 
-        public PaymentMethodServices(PaymentMethodRepository paymentMethodRepo)
+        public PaymentMethodServices(IPaymentMethodRepository paymentMethodRepo)
         {
             _paymentMethodRepo = paymentMethodRepo;
         }

@@ -1,12 +1,12 @@
-﻿using PaymentManagement.Domain;
-using PaymentManagement.Infrastructure;
+using PaymentManagement.Domain;
+using PaymentManagement.Domain.Interfaces;
 
 namespace PaymentManagement.Application.Services
 {
     public class InvoiceServices
     {
-        private readonly InvoiceRepository _invoiceRepository;
-        public InvoiceServices(InvoiceRepository invoiceRepository)
+        private readonly IInvoiceRepository _invoiceRepository;
+        public InvoiceServices(IInvoiceRepository invoiceRepository)
         {
             _invoiceRepository = invoiceRepository;
         }

@@ -1,4 +1,4 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -6,17 +6,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using PaymentManagement.Application.DTO;
 using PaymentManagement.Domain;
+using PaymentManagement.Domain.Interfaces;
 using PaymentManagement.Domain.models;
-using PaymentManagement.Infrastructure;
 
 namespace PaymentManagement.Application.Services
 {
     public class AuthServices
     {
-        private readonly AuthRepository _authRepository;
+        private readonly IAuthRepository _authRepository;
         private readonly IConfiguration _configuration;
 
-        public AuthServices(AuthRepository authRepository, IConfiguration configuration)
+        public AuthServices(IAuthRepository authRepository, IConfiguration configuration)
         {
             _authRepository = authRepository;
             _configuration = configuration.GetRequiredSection("JwtSettings");
