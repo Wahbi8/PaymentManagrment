@@ -1,4 +1,6 @@
-﻿using PaymentManagement.Domain;
+using System.Text.Json;
+using FluentValidation;
+using PaymentManagement.Domain;
 
 namespace PaymentManagement.Presentation.Middlewares
 {
@@ -21,7 +23,7 @@ namespace PaymentManagement.Presentation.Middlewares
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandled exception");
+                _logger.LogError(ex, "Unhandled exception: {Message}", ex.Message);
 
                 await HandleExceptionAsync(context, ex);
             }
@@ -31,22 +33,34 @@ namespace PaymentManagement.Presentation.Middlewares
         {
             context.Response.ContentType = "application/json";
 
-            context.Response.StatusCode = ex switch
+            var (statusCode, message, errors) = ex switch
             {
-                BusinessException => StatusCodes.Status400BadRequest,
-                NotFoundException => StatusCodes.Status404NotFound,
-                UnauthorizedAccessException => StatusCodes.Status401Unauthorized,
-                _ => StatusCodes.Status500InternalServerError
+                BusinessException businessEx => (StatusCodes.Status400BadRequest, businessEx.Message, (object?)null),
+                NotFoundException => (StatusCodes.Status404NotFound, ex.Message, null),
+                UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, ex.Message, null),
+                ValidationException validationEx => (StatusCodes.Status400BadRequest, "Validation failed", validationEx.Errors.Select(e => new { e.PropertyName, e.ErrorMessage })),
+                ArgumentException => (StatusCodes.Status400BadRequest, ex.Message, null),
+                InvalidOperationException => (StatusCodes.Status400BadRequest, ex.Message, null),
+                _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred", (object?)null)
             };
+
+            context.Response.StatusCode = statusCode;
 
             var response = new
             {
-                error = ex.Message
+                success = false,
+                message,
+                errors,
+                timestamp = DateTime.UtcNow
             };
 
-            return context.Response.WriteAsJsonAsync(response);
+            var jsonOptions = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+            };
+
+            return context.Response.WriteAsync(JsonSerializer.Serialize(response, jsonOptions));
         }
     }
-
-
 }

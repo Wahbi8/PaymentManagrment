@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PaymentManagement.Domain;
 using PaymentManagement.Domain.models;
 
@@ -12,9 +12,11 @@ namespace PaymentManagement.Infrastructure
         public DbSet<User> Users { get; set; }
         public DbSet<Company> Company { get; set; }
         public DbSet<Invoice> Invoice { get; set; }
+        public DbSet<InvoiceLineItem> InvoiceLineItem { get; set; }
         public DbSet<RefreshToken> RefreshToken { get; set; }
         public DbSet<Payment> Payment { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<PaymentMethod> PaymentMethod { get; set; }
+        public DbSet<AuditTrail> AuditTrail { get; set; }
     }
 }

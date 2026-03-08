@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using PaymentManagement.Domain;
 using PaymentManagement.Application.Services;
@@ -7,61 +7,96 @@ using PaymentManagement.Application.DTO;
 
 namespace PaymentManagement.Presentation.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
     public class InvoiceController : ControllerBase
     {
         private readonly InvoiceServices _invoiceServices;
+
         public InvoiceController(InvoiceServices invoiceServices)
         {
             _invoiceServices = invoiceServices;
         }
-        [HttpGet("GetINvoices")]
-        public async Task<List<Invoice>> GetInvoicesByCompanyId()
+
+        [HttpGet]
+        public async Task<ActionResult<PagedResult<Invoice>>> GetInvoicesByUserId([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            return await _invoiceServices.GetInvoicesByCompanyId(User.GetUserId());
+            var userId = User.GetUserId();
+            var result = await _invoiceServices.GetInvoicesByUserId(userId, pageNumber, pageSize);
+            return Ok(result);
         }
-        [HttpGet("GetInvoiceById")]
-        public async Task<Invoice> GetInvoiceById(Guid id)
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Invoice>> GetInvoiceById(Guid id)
         {
-            return await _invoiceServices.GetInvoiceById(id);
+            var invoice = await _invoiceServices.GetInvoiceById(id);
+            return Ok(invoice);
         }
-        [HttpPost("AddInvoice")]
-        public async Task<IActionResult> AddInvoice([FromBody] Invoice invoice)
+
+        [HttpPost]
+        public async Task<ActionResult<Invoice>> CreateInvoiceWithLineItems([FromBody] CreateInvoiceWithLineItemsDto dto)
         {
-            await _invoiceServices.AddInvoice(invoice);
+            var userId = User.GetUserId();
+            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "unknown";
+            
+            var invoice = await _invoiceServices.CreateInvoiceWithLineItems(dto, userId, userEmail);
+            return CreatedAtAction(nameof(GetInvoiceById), new { id = invoice.Id }, invoice);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateInvoice(Guid id, [FromBody] Invoice invoice)
+        {
+            var userId = User.GetUserId();
+            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "unknown";
+            
+            invoice.Id = id;
+            await _invoiceServices.UpdateInvoice(invoice, userId, userEmail);
             return Ok();
         }
-        [HttpPut("UpdateInvoice")]
-        public async Task<IActionResult> UpdateInvoice([FromBody] Invoice invoice)
-        {
-            await _invoiceServices.UpdateInvoice(invoice);
-            return Ok();
-        }
-        [HttpDelete("DeleteInvoice")]
+
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInvoice(Guid id)
         {
-            await _invoiceServices.DeleteInvoice(id);
-            return Ok();
+            var userId = User.GetUserId();
+            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "unknown";
+            
+            await _invoiceServices.DeleteInvoice(id, userId, userEmail);
+            return NoContent();
         }
 
-        [HttpPost("SendEmail")]
-        public async Task<IActionResult> SendInvoiceEmail([FromBody] InvoiceEmailRequest request)
+        [HttpPost("{id}/send")]
+        public async Task<IActionResult> SendInvoice(Guid id)
         {
-            //For sending email manually
-            await _invoiceServices.SendInvoiceEmail(request.InvoiceId, request.RecipientEmail);
+            var userId = User.GetUserId();
+            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "unknown";
+            
+            await _invoiceServices.SendInvoice(id, userId, userEmail);
             return Ok();
         }
 
-        [HttpPost("CancelInvoice")]
+        [HttpPost("{id}/cancel")]
         public async Task<IActionResult> CancelInvoice(Guid id)
         {
-            await _invoiceServices.CancelInvoice(id);
+            var userId = User.GetUserId();
+            var userEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "unknown";
+            
+            await _invoiceServices.CancelInvoice(id, userId, userEmail);
             return Ok();
         }
 
-        [HttpGet("GetAllInvoices")]
-        public async Task<List<Invoice>> GetAllInvoices()
+        [HttpGet("all")]
+        public async Task<ActionResult<PagedResult<Invoice>>> GetAllInvoices([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            return await _invoiceServices.GetAllInvoices();
+            var result = await _invoiceServices.GetAllInvoices(pageNumber, pageSize);
+            return Ok(result);
+        }
+
+        [HttpPost("{id}/line-items")]
+        public async Task<IActionResult> AddLineItem(Guid id, [FromBody] CreateInvoiceLineItemDto dto)
+        {
+            await _invoiceServices.AddLineItem(id, dto);
+            return Ok();
         }
     }
 }

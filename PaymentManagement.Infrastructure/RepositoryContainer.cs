@@ -19,6 +19,8 @@ namespace PaymentManagement.Infrastructure
             Repository.AddScoped<ICustomerRepository, CustomerRepository>();
             Repository.AddScoped<IPaymentRepository, PaymentRepository>();
             Repository.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
+            Repository.AddScoped<IInvoiceLineItemRepository, InvoiceLineItemRepository>();
+            Repository.AddScoped<IAuditTrailRepository, AuditTrailRepository>();
 
             return Repository;
         }

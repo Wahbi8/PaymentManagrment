@@ -23,6 +23,7 @@ namespace PaymentManagement.Application
             services.AddScoped<CustomerServices>();
             services.AddScoped<PaymentServices>();
             services.AddScoped<PaymentMethodServices>();
+            services.AddScoped<AuditTrailService>();
             
             return services;
         }

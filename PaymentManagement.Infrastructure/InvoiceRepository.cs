@@ -18,7 +18,14 @@ namespace PaymentManagement.Infrastructure
             _context = context;
         }
 
-        public async Task<List<Invoice>> GetAllInvoices() => await _context.Invoice.ToListAsync();
+        public async Task<List<Invoice>> GetAllInvoices(int pageNumber, int pageSize)
+        {
+            return await _context.Invoice
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+        public async Task<int> GetInvoicesCount() => await _context.Invoice.CountAsync();
 
         public async Task<Invoice> GetInvoiceById(Guid id) => await _context.Invoice.FindAsync(id);
 
@@ -43,7 +50,17 @@ namespace PaymentManagement.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public async Task<List<Invoice>> GetInvoicesByCompanyId(Guid companyId) =>
-            await _context.Invoice.Where(i => i.CompanyId == companyId).ToListAsync();
+        public async Task<List<Invoice>> GetInvoicesByUserId(Guid userId, int pageNumber, int pageSize) =>
+            await _context.Invoice
+                .Where(i => i.UserId == userId)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+        public async Task<int> GetInvoicesCountByUserId(Guid userId) =>
+             await _context.Invoice
+                 .Where(i => i.UserId == userId)
+                 .CountAsync();
+
     }
 }
