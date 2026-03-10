@@ -12,21 +12,24 @@ namespace PaymentManagement.Tests
     public class AuthServicesTests
     {
         private readonly Mock<IAuthRepository> _mockAuthRepository;
-        private readonly Mock<IConfiguration> _mockConfiguration;
+        private readonly IConfiguration _configuration;
         private readonly AuthServices _authServices;
 
         public AuthServicesTests()
         {
             _mockAuthRepository = new Mock<IAuthRepository>();
-            _mockConfiguration = new Mock<IConfiguration>();
             
-            var jwtSection = new Mock<IConfigurationSection>();
-            jwtSection.Setup(x => x["SecretKey"]).Returns("ThisIsASecretKeyForJwtTokenGeneration12345");
-            jwtSection.Setup(x => x["Issuer"]).Returns("TestIssuer");
-            jwtSection.Setup(x => x["Audience"]).Returns("TestAudience");
-            _mockConfiguration.Setup(x => x.GetSection("JwtSettings")).Returns(jwtSection.Object);
+            var inMemorySettings = new Dictionary<string, string?> {
+                {"JwtSettings:SecretKey", "ThisIsASecretKeyForJwtTokenGeneration12345"},
+                {"JwtSettings:Issuer", "TestIssuer"},
+                {"JwtSettings:Audience", "TestAudience"}
+            };
+            
+            _configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
 
-            _authServices = new AuthServices(_mockAuthRepository.Object, _mockConfiguration.Object);
+            _authServices = new AuthServices(_mockAuthRepository.Object, _configuration);
         }
 
         [Fact]
@@ -50,7 +53,7 @@ namespace PaymentManagement.Tests
         [Fact]
         public async Task Register_ThrowsException_WhenFieldsAreMissing()
         {
-            var user = new User { Name = "John", Email = null, Password = "password", CompanyId = Guid.NewGuid() };
+            var user = new User { Name = "John", Email = null!, Password = "password", CompanyId = Guid.NewGuid() };
 
             await Assert.ThrowsAsync<BusinessException>(() => _authServices.Register(user));
         }
