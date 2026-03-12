@@ -13,7 +13,7 @@ namespace PaymentManagement.Application.Services
 
             string jsonData = JsonSerializer.Serialize(emailInfo);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var respose = await client.PostAsync("http//localhost:1212/email/invoice", content);
+            var respose = await client.PostAsync("http://localhost:1212/email/invoice", content);
         }
     }
 }
