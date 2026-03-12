@@ -120,7 +120,6 @@ dotnet tool install --global dotnet-ef
 Run migrations and update the database (run from repo root):
 
 dotnet ef database update --project PaymentManagement.Infrastructure --startup-project PaymentManagement.Presentation
-```
 
 Adjust commands if you use a different startup or migrations project.
 
@@ -150,6 +149,27 @@ docker build -f PaymentManagement.Presentation\Dockerfile -t paymentmanagement .
 docker run -p 5000:80 -e ConnectionStrings__DefaultConnection="<your-connection>" -e JwtSettings__SecretKey="<your-secret>" paymentmanagement
 
 CI workflows for building, testing, and publishing container images are under `.github/workflows` (see `ci.yml` and `docker.yml`).
+
+## Email Microservice
+
+Email sending is delegated to an external microservice implemented in Go that uses RabbitMQ for message delivery and processing. The microservice source and documentation are available at: [PM_Golang](https://github.com/Wahbi8/PM_Golang).
+
+### How this project integrates:
+
+- The application contains a `SendEmailServices` class that posts invoice email requests to an HTTP endpoint (default: `http://localhost:1212/email/invoice`).
+- The Go microservice consumes messages from RabbitMQ and/or exposes the HTTP endpoint used by the application. Ensure the microservice and a RabbitMQ broker are running to enable email delivery.
+
+### Quick start (overview):
+1. Clone the microservice: 
+   git clone https://github.com/Wahbi8/PM_Golang
+2. Start RabbitMQ (Docker recommended):
+   docker run -d --hostname rabbit --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+3. Follow the microservice README in the cloned repo to build/run the Go service (it typically exposes the HTTP endpoint on port `1212` by default).
+4. Ensure `PaymentManagement` can reach the microservice (adjust `SendEmailServices` URL or use environment variables) and then trigger email sends from the application.
+
+**Notes:**
+- For production, run RabbitMQ and the Go microservice in appropriate infrastructure (containers, Kubernetes, or a managed RabbitMQ) and secure the HTTP and AMQP endpoints.
+- If you want, I can update the `SendEmailServices` to read the microservice URL from configuration and add retry/timeout handling.
 
 ## API Endpoints
 
