@@ -154,22 +154,53 @@ CI workflows for building, testing, and publishing container images are under `.
 
 Email sending is delegated to an external microservice implemented in Go that uses RabbitMQ for message delivery and processing. The microservice source and documentation are available at: [PM_Golang](https://github.com/Wahbi8/PM_Golang).
 
-### How this project integrates:
+### How this project integrates
 
-- The application contains a `SendEmailServices` class that posts invoice email requests to an HTTP endpoint (default: `http://localhost:1212/email/invoice`).
-- The Go microservice consumes messages from RabbitMQ and/or exposes the HTTP endpoint used by the application. Ensure the microservice and a RabbitMQ broker are running to enable email delivery.
+- The application contains a `SendEmailServices` class (`PaymentManagement.Application\Services\SendEmailServices.cs`) that posts invoice email requests to an HTTP endpoint (default: `http://localhost:1212/email/invoice`).
+- The Go microservice (PM_Golang) accepts HTTP submissions and/or processes RabbitMQ messages for asynchronous delivery. Ensure the microservice and a RabbitMQ broker are running to enable email delivery.
 
-### Quick start (overview):
-1. Clone the microservice: 
-   git clone https://github.com/Wahbi8/PM_Golang
+### PM_Golang — Concurrency & Processing (summary)
+
+PM_Golang is built for concurrent, resilient email processing. Key architectural and operational notes to document here:
+
+- **Worker model and goroutines**: The service uses a pool of workers that run in separate goroutines to process messages concurrently. Each worker handles one message at a time, allowing the system to process multiple email requests in parallel without blocking HTTP request handlers.
+- **RabbitMQ QoS / Prefetch**: Consumers set a prefetch value (QoS) to limit the number of unacknowledged messages a consumer can hold — the repository defaults to a conservative value (e.g., 5). Prefetch limits per-consumer concurrency and helps protect external services like the Resend API from overload.
+- **Retry and failure tracking**: Failed deliveries are recorded in a database with retry counts. The service retries failed messages up to a configurable limit. Permanently failed messages are stored for inspection and manual handling.
+- **Idempotency**: Messages include identifiers (e.g., `InvoiceId`) so that retries are idempotent where necessary and duplicate deliveries are avoidable by the consumer logic.
+- **Configuration knobs**:
+  - `RABBITMQ_URL` — AMQP connection (default: `amqp://guest:guest@localhost:5672`)
+  - `RABBITMQ_PREFETCH` / `CONSUMER_PREFETCH` — prefetch/QoS per consumer (e.g., `5`)
+  - `WORKER_COUNT` — number of worker goroutines (if applicable)
+  - `RETRY_LIMIT` — maximum retry attempts before marking as permanently failed
+  - `RETRY_DELAY` or backoff parameters — time between retries (fixed or exponential)
+  - `Resend_api_key` — API key for the Resend provider
+- **Observability and tuning**: Use the RabbitMQ management UI (default port `15672`), logs (zerolog in PM_Golang), and application metrics to monitor throughput, queue length, and error rates. Start with conservative settings and increase concurrency after validating stability.
+
+### Quick start for the email microservice
+
+1. Clone PM_Golang:
+
+git clone https://github.com/Wahbi8/PM_Golang.git
+cd PM_Golang
+
 2. Start RabbitMQ (Docker recommended):
-   docker run -d --hostname rabbit --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
-3. Follow the microservice README in the cloned repo to build/run the Go service (it typically exposes the HTTP endpoint on port `1212` by default).
-4. Ensure `PaymentManagement` can reach the microservice (adjust `SendEmailServices` URL or use environment variables) and then trigger email sends from the application.
+
+docker run -d --hostname rabbit --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+3. Create a `.env` file in the PM_Golang project root with required variables (example):
+
+Resend_api_key=your_resend_api_key_here
+RABBITMQ_URL=amqp://guest:guest@localhost:5672
+RABBITMQ_PREFETCH=5
+RETRY_LIMIT=3
+
+4. Build and run the Go service following the PM_Golang README (the service typically listens on `http://localhost:1212`).
+
+5. Ensure `PaymentManagement` can reach the microservice (adjust `SendEmailServices` URL or provide the endpoint via configuration) and then trigger sends from the application.
 
 **Notes:**
 - For production, run RabbitMQ and the Go microservice in appropriate infrastructure (containers, Kubernetes, or a managed RabbitMQ) and secure the HTTP and AMQP endpoints.
-- If you want, I can update the `SendEmailServices` to read the microservice URL from configuration and add retry/timeout handling.
+- Tune prefetch, worker counts, and retry/backoff settings based on load tests and external API limits.
 
 ## API Endpoints
 
@@ -218,7 +249,7 @@ Email sending is delegated to an external microservice implemented in Go that us
 
 ## API Surface
 
-Controllers exposed in the Presentation project include:
+Controllers exposed in the `PaymentManagement.Presentation` project include:
 - `AuthController` — authentication endpoints (login/refresh).
 - `CustomerController` — customer CRUD operations.
 - `CompanyController` — company CRUD operations.
@@ -271,4 +302,12 @@ Common workflow:
 
 - If migrations fail, check the connection string and ensure the target database server is reachable.
 - If authentication fails, ensure the `JwtSettings__SecretKey` matches between clients and the API.
+
+## License
+
+MIT License
+
+## Contact
+
+For issues and contributions, open GitHub Issues or Pull Requests on the repository.
 
