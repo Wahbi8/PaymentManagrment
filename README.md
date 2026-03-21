@@ -303,11 +303,4 @@ Common workflow:
 - If migrations fail, check the connection string and ensure the target database server is reachable.
 - If authentication fails, ensure the `JwtSettings__SecretKey` matches between clients and the API.
 
-## License
-
-MIT License
-
-## Contact
-
-For issues and contributions, open GitHub Issues or Pull Requests on the repository.
 
