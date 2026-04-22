@@ -9,9 +9,9 @@
 *.user
 *.userosscache
 *.sln.docstates
-*.AccessTokenRefresh
-*.JwtRateLimit
-*.JwtMiddleware
+*.AccessTokenRefresh.cs
+*.JwtRateLimit.cs
+*.JwtMiddleware.cs
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
